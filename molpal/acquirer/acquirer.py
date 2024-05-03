@@ -11,6 +11,8 @@ from tqdm import tqdm
 
 from molpal.acquirer import metrics
 
+import os
+
 T = TypeVar("T")
 
 
@@ -287,7 +289,11 @@ class Acquirer:
             total = default_timer() - begin
             mins, secs = divmod(int(total), 60)
             print(f"      Utility calculation took {mins}m {secs}s")
+        with open(os.path.join(f"/content/molpal/folder_output/run_output/all_ucb.csv"), "a") as f:
 
+            U.tofile(f, ",")
+
+            f.write("\n")
         if cluster_ids is None and cluster_sizes is None:
             heap = []
             for x, u in tqdm(zip(xs, U), "Acquiring", U.size, disable=self.verbose < 1):
