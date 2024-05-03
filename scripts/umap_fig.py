@@ -41,7 +41,7 @@ def reduce_fps(fps_h5: str, k: Union[int, float] = 0.1,
     
     fps_reduced = np.empty((len(fps), 2))
     for i in tqdm(range(100000)):
-        fps_reduced[i] = transform.tranform(fps[i])
+        fps_reduced[i] = transform.transform(fps[i])
     np.save(fps_reduced_npy, fps_reduced)
     print(f'Reduced fingerprints saved to {fps_reduced_npy}')
 
