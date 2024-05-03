@@ -329,7 +329,7 @@ class Explorer:
 
         print("Finished exploring!")
         print(
-            f"FINAL TOP-{self.k} AVE: {self.top_k_avg:0.3f} | "
+            f"FINAL TOP-{self.k} AVE: {self.top_k_avg} | "
             f"FINAL BUDGET: {len(self)}/{self.budget}."
         )
         print("Final averages")
