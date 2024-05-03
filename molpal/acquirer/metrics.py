@@ -5,6 +5,8 @@ from typing import Callable, Optional, Set
 import numpy as np
 from scipy.stats import norm
 
+import os
+
 RG = np.random.default_rng()
 
 
@@ -167,6 +169,12 @@ def ucb(Y_mean: np.ndarray, Y_var: np.ndarray, beta: int = 2) -> np.ndarray:
     np.ndarray
         the upper confidence bound acquisition scores
     """
+    with open(os.path.join(f"/content/molpal/folder_output/run_output/all_std.csv"), "a") as f:
+
+    Y_var.tofile(f, ",")
+
+    f.write("\n")
+    
     return Y_mean + beta * np.sqrt(Y_var)
 
 
