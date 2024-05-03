@@ -171,9 +171,9 @@ def ucb(Y_mean: np.ndarray, Y_var: np.ndarray, beta: int = 2) -> np.ndarray:
     """
     with open(os.path.join(f"/content/molpal/folder_output/run_output/all_std.csv"), "a") as f:
 
-    Y_var.tofile(f, ",")
+     Y_var.tofile(f, ",")
 
-    f.write("\n")
+     f.write("\n")
     
     return Y_mean + beta * np.sqrt(Y_var)
 
