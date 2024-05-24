@@ -39,6 +39,7 @@ from molpal.explorer import Explorer
 This project and Molpal software used are licensed under the MIT License.
 
 ## References
+**This repository is a fork from https://github.com/coleygroup/molpal**
 This project is based on Molpal software, developed by the Coley Group: https://github.com/coleygroup/molpal
 
 ## Authors
