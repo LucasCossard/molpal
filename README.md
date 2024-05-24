@@ -15,4 +15,4 @@ Using  a modified version of Molpal, the objective is to find a good way to leve
 git clone https://github.com/Nohalyan/molpal
 ```
 
-2. Install the necessary dependencies. YOu can use the environment.yml
+2. Install the necessary dependencies. You can use the environment.yml
