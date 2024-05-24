@@ -11,8 +11,8 @@ Using  a modified version of Molpal, the objective is to find a good way to leve
 
 1. Clone the modified version of Molpal from this repository:
 
-"""
+```
 git clone https://github.com/Nohalyan/molpal
-"""
+```
 
 2. Install the necessary dependencies. YOu can use the environment.yml
