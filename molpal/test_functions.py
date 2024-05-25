@@ -1,6 +1,4 @@
 import subprocess
-import os
-import pandas as pd
 
 def run_molpal(model, confid, metrics, init, batches, max_iter, k, BETA):
     """
@@ -35,7 +33,7 @@ def run_molpal(model, confid, metrics, init, batches, max_iter, k, BETA):
         "--beta", str(BETA)
     ]
 
-    subprocess.call(command)
+    subprocess.run(command)
 
 # Example usage:
 # run_molpal("model_value", "confid_value", "metrics_value", 10, 20, 100, 5, 0.1)
