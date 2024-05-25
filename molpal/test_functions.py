@@ -72,7 +72,7 @@ def molpal_run(model, confid, metrics, init, batches, max_iter, k, BETA, dataset
     """
 
     command = [
-        "!molpal", "run",
+        "molpal", "run",
         "--write-intermediate", "--write-final", "--retrain-from-scratch",
         "--library", f"/content/molpal/data/Enamine{dataset}k_scores.csv.gz",
         "-o", "lookup",
