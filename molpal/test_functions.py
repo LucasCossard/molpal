@@ -18,7 +18,7 @@ def run_molpal(model, confid, metrics, init, batches, max_iter, k, BETA):
     """
 
     command = [
-        "!molpal", "run",
+        "molpal", "run",
         "--write-intermediate", "--write-final", "--retrain-from-scratch",
         "--library", "/content/molpal/data/Enamine10k_scores.csv.gz",
         "-o", "lookup",
