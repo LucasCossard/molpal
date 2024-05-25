@@ -131,6 +131,8 @@ def Molpal_run(model, confid, metrics, init, batches, max_iter, dataset, top_x_p
 import subprocess
 import os
 
+import subprocess
+
 def molpal_run2(model, confid, metrics, init, batches, max_iter, k, BETA):
     """
     Runs the molpal tool with specified parameters and moves the generated output files to appropriate locations.
@@ -140,29 +142,19 @@ def molpal_run2(model, confid, metrics, init, batches, max_iter, k, BETA):
     The function executes molpal with given parameters, renames the final output file, and moves the output directory.
     """
 
-    subprocess.run([
-        "molpal", "run",
-        "--write-intermediate", "--write-final", "--retrain-from-scratch",
-        "--library", "/content/molpal/data/Enamine10k_scores.csv.gz",
-        "-o", "lookup",
-        "--objective-config", "/content/molpal/examples/objective/Enamine10k_lookup.ini",
-        "--model", model,
-        "--conf-method", confid,
-        "--metric", metrics,
-        "--init-size", str(init),
-        "--batch-size", str(batches),
-        "--max-iters", str(max_iter),
-        "--fps", "/content/molpal/folder_output/fps_file.h5",
-        "--output-dir", "run_output",
-        "-k", str(k),
-        "--beta", str(BETA)
-    ])
+    command = f"molpal run --write-intermediate --write-final --retrain-from-scratch --library /content/molpal/data/Enamine10k_scores.csv.gz -o lookup --objective-config /content/molpal/examples/objective/Enamine10k_lookup.ini \
+        --model {model} --conf-method {confid} --metric {metrics} --init-size {init} \
+        --batch-size {batches} --max-iters {max_iter} --fps /content/molpal/folder_output/fps_file.h5 \
+        --output-dir run_output -k {k} --beta {BETA}"
+
+    subprocess.run(command, shell=True)
 
     output_filename_csv = f"/content/molpal/folder_output/run_output/all_explored_final_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}.csv"
     os.rename("/content/molpal/folder_output/run_output/all_explored_final.csv", output_filename_csv)
 
     output_folder_name = f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}"
     os.rename("/content/molpal/folder_output/run_output", output_folder_name)
+
 
 
 def molpal_run_random2(model, confid, init, batches, max_iter, k, BETA):
