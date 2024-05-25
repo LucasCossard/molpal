@@ -178,22 +178,7 @@ def molpal_run2(model, confid, metrics, init, batches, max_iter, k, BETA):
     The function executes molpal with given parameters, renames the final output file, and moves the output directory.
     """
 
- command = ["!molpal", "run",
-        "--write-intermediate", "--write-final", "--retrain-from-scratch",
-        "--library", "/content/molpal/data/Enamine10k_scores.csv.gz",
-        "-o", "lookup",
-        "--objective-config", "/content/molpal/examples/objective/Enamine10k_lookup.ini",
-        "--model", model,
-        "--conf-method", confid,
-        "--metric", metrics,
-        "--init-size", str(init),
-        "--batch-size", str(batches),
-        "--max-iters", str(max_iter),
-        "--fps", "/content/molpal/folder_output/fps_file.h5",
-        "--output-dir", "run_output",
-        "-k", str(k),
-        "--beta", str(BETA)
-    ]
+ command = ["!molpal", "run","--write-intermediate", "--write-final", "--retrain-from-scratch","--library", "/content/molpal/data/Enamine10k_scores.csv.gz","-o", "lookup","--objective-config", "/content/molpal/examples/objective/Enamine10k_lookup.ini","--model", model,"--conf-method", confid,"--metric", metrics,"--init-size", str(init),"--batch-size", str(batches),"--max-iters", str(max_iter),"--fps", "/content/molpal/folder_output/fps_file.h5","--output-dir", "run_output","-k", str(k),"--beta", str(BETA)]
 
     subprocess.run(command, shell=True)
 
