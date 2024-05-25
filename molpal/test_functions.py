@@ -18,7 +18,7 @@ def run_molpal(model, confid, metrics, init, batches, max_iter, k, BETA):
     """
 
     command = [
-        "\!molpal", "run",
+        "!molpal", "run",
         "--write-intermediate", "--write-final", "--retrain-from-scratch",
         "--library", "/content/molpal/data/Enamine10k_scores.csv.gz",
         "-o", "lookup",
@@ -35,7 +35,7 @@ def run_molpal(model, confid, metrics, init, batches, max_iter, k, BETA):
         "--beta", str(BETA)
     ]
 
-    subprocess.run(command)
+    subprocess.call(command)
 
 # Example usage:
 # run_molpal("model_value", "confid_value", "metrics_value", 10, 20, 100, 5, 0.1)
