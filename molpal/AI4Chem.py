@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import subprocess
 
 def process_and_merge_csvs(csv_score, csv_ucb, csv_std, output_filename):
     df1 = pd.read_csv(csv_score)
