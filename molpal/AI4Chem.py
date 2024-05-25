@@ -20,7 +20,7 @@ def run_molpal(model, confid, metrics, init, batches, max_iter, k, BETA):
     """
 
     command = [
-        "molpal", "run",
+        "!molpal", "run",
         "--write-intermediate", "--write-final", "--retrain-from-scratch",
         "--library", "/content/molpal/data/Enamine10k_scores.csv.gz",
         "-o", "lookup",
@@ -178,8 +178,7 @@ def molpal_run2(model, confid, metrics, init, batches, max_iter, k, BETA):
     The function executes molpal with given parameters, renames the final output file, and moves the output directory.
     """
 
- command = [
-        "!molpal", "run",
+ command = ["!molpal", "run",
         "--write-intermediate", "--write-final", "--retrain-from-scratch",
         "--library", "/content/molpal/data/Enamine10k_scores.csv.gz",
         "-o", "lookup",
