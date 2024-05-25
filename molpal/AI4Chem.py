@@ -128,6 +128,9 @@ def Molpal_run(model, confid, metrics, init, batches, max_iter, dataset, top_x_p
     - BETA (float): Beta parameter for model configuration.
 """
 
+import subprocess
+import os
+
 def molpal_run2(model, confid, metrics, init, batches, max_iter, k, BETA):
     """
     Runs the molpal tool with specified parameters and moves the generated output files to appropriate locations.
@@ -137,16 +140,29 @@ def molpal_run2(model, confid, metrics, init, batches, max_iter, k, BETA):
     The function executes molpal with given parameters, renames the final output file, and moves the output directory.
     """
 
-    !molpal run --write-intermediate --write-final --retrain-from-scratch --library /content/molpal/data/Enamine10k_scores.csv.gz -o lookup --objective-config /content/molpal/examples/objective/Enamine10k_lookup.ini \
-        --model {model} --conf-method {confid} --metric {metrics} --init-size {init} \
-        --batch-size {batches} --max-iters {max_iter} --fps /content/molpal/folder_output/fps_file.h5 \
-        --output-dir run_output -k {k} --beta {BETA}
+    subprocess.run([
+        "molpal", "run",
+        "--write-intermediate", "--write-final", "--retrain-from-scratch",
+        "--library", "/content/molpal/data/Enamine10k_scores.csv.gz",
+        "-o", "lookup",
+        "--objective-config", "/content/molpal/examples/objective/Enamine10k_lookup.ini",
+        "--model", model,
+        "--conf-method", confid,
+        "--metric", metrics,
+        "--init-size", str(init),
+        "--batch-size", str(batches),
+        "--max-iters", str(max_iter),
+        "--fps", "/content/molpal/folder_output/fps_file.h5",
+        "--output-dir", "run_output",
+        "-k", str(k),
+        "--beta", str(BETA)
+    ])
 
     output_filename_csv = f"/content/molpal/folder_output/run_output/all_explored_final_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}.csv"
-    !mv /content/molpal/folder_output/run_output/all_explored_final.csv {output_filename_csv}
+    os.rename("/content/molpal/folder_output/run_output/all_explored_final.csv", output_filename_csv)
 
     output_folder_name = f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}"
-    !mv /content/molpal/folder_output/run_output {output_folder_name}
+    os.rename("/content/molpal/folder_output/run_output", output_folder_name)
 
 
 def molpal_run_random2(model, confid, init, batches, max_iter, k, BETA):
@@ -158,16 +174,29 @@ def molpal_run_random2(model, confid, init, batches, max_iter, k, BETA):
     The function executes molpal with given parameters and the metric set to random, renames the final output file, and moves the output directory.
     """
 
-    !molpal run --write-intermediate --write-final --retrain-from-scratch --library /content/molpal/data/Enamine10k_scores.csv.gz -o lookup --objective-config /content/molpal/examples/objective/Enamine10k_lookup.ini \
-        --model {model} --conf-method {confid} --metric random --init-size {init} \
-        --batch-size {batches} --max-iters {max_iter} --fps /content/molpal/folder_output/fps_file.h5 \
-        --output-dir run_output -k {k} --beta {BETA}
+    subprocess.run([
+        "molpal", "run",
+        "--write-intermediate", "--write-final", "--retrain-from-scratch",
+        "--library", "/content/molpal/data/Enamine10k_scores.csv.gz",
+        "-o", "lookup",
+        "--objective-config", "/content/molpal/examples/objective/Enamine10k_lookup.ini",
+        "--model", model,
+        "--conf-method", confid,
+        "--metric", "random",
+        "--init-size", str(init),
+        "--batch-size", str(batches),
+        "--max-iters", str(max_iter),
+        "--fps", "/content/molpal/folder_output/fps_file.h5",
+        "--output-dir", "run_output",
+        "-k", str(k),
+        "--beta", str(BETA)
+    ])
 
     output_filename_csv = f"/content/molpal/folder_output/run_output/all_explored_final_{model}_random_{init}_{batches}_{max_iter}_beta_{BETA}.csv"
-    !mv /content/molpal/folder_output/run_output/all_explored_final.csv {output_filename_csv}
+    os.rename("/content/molpal/folder_output/run_output/all_explored_final.csv", output_filename_csv)
 
     output_folder_name = f"/content/molpal/folder_output/run_output_{model}_random_{init}_{batches}_{max_iter}_beta_{BETA}"
-    !mv /content/molpal/folder_output/run_output {output_folder_name}
+    os.rename("/content/molpal/folder_output/run_output", output_folder_name)
 
 
 def frac_top_x(top_x_perc, dataset, csv_selectedsmiles):
@@ -248,6 +277,9 @@ def experiment_top_ef(model, confid, metrics, init, batches, max_iter, dataset, 
     return frac, EF
 
 
+import subprocess
+import os
+
 def molpal_run3(model, confid, metrics, init, batches, max_iter, k, BETA, n):
     """
     Runs the molpal tool with specified parameters and saves the output with run index.
@@ -267,38 +299,64 @@ def molpal_run3(model, confid, metrics, init, batches, max_iter, k, BETA, n):
     and moves the output directory to a unique location based on the run index.
     """
 
-    !molpal run --write-intermediate --write-final --retrain-from-scratch --library /content/molpal/data/Enamine10k_scores.csv.gz -o lookup --objective-config /content/molpal/examples/objective/Enamine10k_lookup.ini \
-        --model {model} --conf-method {confid} --metric {metrics} --init-size {init} \
-        --batch-size {batches} --max-iters {max_iter} --fps /content/molpal/folder_output/fps_file.h5 \
-        --output-dir run_output -k {k} --beta {BETA}
+    subprocess.run([
+        "molpal", "run",
+        "--write-intermediate", "--write-final", "--retrain-from-scratch",
+        "--library", "/content/molpal/data/Enamine10k_scores.csv.gz",
+        "-o", "lookup",
+        "--objective-config", "/content/molpal/examples/objective/Enamine10k_lookup.ini",
+        "--model", model,
+        "--conf-method", confid,
+        "--metric", metrics,
+        "--init-size", str(init),
+        "--batch-size", str(batches),
+        "--max-iters", str(max_iter),
+        "--fps", "/content/molpal/folder_output/fps_file.h5",
+        "--output-dir", "run_output",
+        "-k", str(k),
+        "--beta", str(BETA)
+    ])
 
     output_filename_csv = f"/content/molpal/folder_output/run_output/all_explored_final_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}_run{n}.csv"
-    !mv /content/molpal/folder_output/run_output/all_explored_final.csv {output_filename_csv}
+    os.rename("/content/molpal/folder_output/run_output/all_explored_final.csv", output_filename_csv)
 
     output_folder_name = f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}_run{n}"
-    !mv /content/molpal/folder_output/run_output {output_folder_name}
+    os.rename("/content/molpal/folder_output/run_output", output_folder_name)
 
 
 def molpal_run_random3(model, confid, init, batches, max_iter, k, BETA, n):
     """
     Runs the molpal tool with random metrics and saves the output with run index.
 
-    Parameters: same as molpal_run3 without metrics, beacasuse we only use random here
+    Parameters: same as molpal_run3 without metrics, because we only use random here
 
     This function executes molpal with random metrics, renames the final output file with the run index,
     and moves the output directory to a unique location based on the run index.
     """
 
-    !molpal run --write-intermediate --write-final --retrain-from-scratch --library /content/molpal/data/Enamine10k_scores.csv.gz -o lookup --objective-config /content/molpal/examples/objective/Enamine10k_lookup.ini \
-        --model {model} --conf-method {confid} --metric random --init-size {init} \
-        --batch-size {batches} --max-iters {max_iter} --fps /content/molpal/folder_output/fps_file.h5 \
-        --output-dir run_output -k {k} --beta {BETA}
+    subprocess.run([
+        "molpal", "run",
+        "--write-intermediate", "--write-final", "--retrain-from-scratch",
+        "--library", "/content/molpal/data/Enamine10k_scores.csv.gz",
+        "-o", "lookup",
+        "--objective-config", "/content/molpal/examples/objective/Enamine10k_lookup.ini",
+        "--model", model,
+        "--conf-method", confid,
+        "--metric", "random",
+        "--init-size", str(init),
+        "--batch-size", str(batches),
+        "--max-iters", str(max_iter),
+        "--fps", "/content/molpal/folder_output/fps_file.h5",
+        "--output-dir", "run_output",
+        "-k", str(k),
+        "--beta", str(BETA)
+    ])
 
     output_filename_csv = f"/content/molpal/folder_output/run_output/all_explored_final_{model}_random_{init}_{batches}_{max_iter}_beta_{BETA}_run{n}.csv"
-    !mv /content/molpal/folder_output/run_output/all_explored_final.csv {output_filename_csv}
+    os.rename("/content/molpal/folder_output/run_output/all_explored_final.csv", output_filename_csv)
 
     output_folder_name = f"/content/molpal/folder_output/run_output_{model}_random_{init}_{batches}_{max_iter}_beta_{BETA}_run{n}"
-    !mv /content/molpal/folder_output/run_output {output_folder_name}
+    os.rename("/content/molpal/folder_output/run_output", output_folder_name)
 
 
 def experiment_multirun(model, confid, metrics, init, batches, max_iter, dataset, top_x_perc, k, BETA, n):
