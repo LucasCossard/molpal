@@ -3,6 +3,8 @@
 Leveraging Active Learning with uncertainty quantification by Investigation of Molpal Exploration
 </h1>
 
+**Note :This repository is a fork from https://github.com/coleygroup/molpal**
+
 ## Overview 
 
 Molpal (Molecular Pool-based Active Learning) is a software created by the coleygroup for the accelerated discovery of compounds in high-throughput virtual screening environments.
