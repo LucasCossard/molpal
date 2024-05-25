@@ -44,6 +44,19 @@ def run_molpal(model, confid, metrics, init, batches, max_iter, k, BETA):
 # run_molpal("model_value", "confid_value", "metrics_value", 10, 20, 100, 5, 0.1)
 
 """
+"""
+"""
+"""
+"""
+"""
+"""
+"""
+"""
+"""
+"""
+"""
+"""
+"""
 
 def process_and_merge_csvs(csv_score, csv_ucb, csv_std, output_filename):
     df1 = pd.read_csv(csv_score)
