@@ -1,5 +1,3 @@
-
-
 '''
 This file contains all the functions defined and used in this project. 
 As some of these functions use molpal with ‘!molpal run’, this file is not usable and is a showcase of our functions.
