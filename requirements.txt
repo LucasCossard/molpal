@@ -1,0 +1,17 @@
+torch
+torchvision
+torchaudio
+configargparse
+h5py
+numpy
+ray[default]>=1.11
+rdkit
+pytorch-lightning
+scikit-learn
+tensorflow
+tensorflow-addons
+tqdm
+umap-learn
+pandas
+matplotlib
+seaborn
