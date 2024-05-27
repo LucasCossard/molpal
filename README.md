@@ -5,7 +5,7 @@ Leveraging Active Learning with uncertainty quantification by Investigation of M
 
 **Note :This repository is a fork from https://github.com/coleygroup/molpal**
 
-**Any file added or modified less than 2 years must be considered as part of our ‘molpal version’.**
+**Any file added or modified within the last 2 years must be considered as part of our ‘molpal version’.**
 
 ## 🔍 Overview 🔎
 
