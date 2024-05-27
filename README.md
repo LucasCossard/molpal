@@ -38,6 +38,13 @@ from molpal.explorer import Explorer
 ```
 
 ## Notebooks
+In the notebooks file, we provide the notebook we used to carry out our various experiments in order to observe the effects of:
+
+- UCB & Score correlation
+- Initialization size
+- UCB & β study
+- Acquisition function on active learning
+- Diversity
 
 ## License 
 This project and Molpal software used are licensed under the MIT License.
