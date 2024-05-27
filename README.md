@@ -48,6 +48,8 @@ In the notebooks file, we provide the notebook we used to carry out our various 
 - UCB & β study
 - Acquisition function on active learning
 - Diversity
+- UCB & Score correlation on different 10k dataset
+- UMAP
 
 ## 📗 License 📕 
 This project and Molpal software used are licensed under the MIT License.
