@@ -35,7 +35,6 @@ from molpal.objectives import Objective
 from molpal.pools import pool
 from molpal.exceptions import IncompatibilityError, InvalidExplorationError
 from molpal.explorer import Explorer
-##### from NO_FUNCTION import * ##### 
 ```
 ## License 
 This project and Molpal software used are licensed under the MIT License.
