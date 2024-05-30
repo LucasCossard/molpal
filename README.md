@@ -90,4 +90,4 @@ This project is based on Molpal software, developed by the Coley Group: https://
 - Segura David: https://github.com/Davidmingsegura
 - Cossard Lucas: https://github.com/Nohalyan
 
-This project was carried out as part of EPFL's AI for Chemistry course.
+**This project was carried out as part of EPFL's AI for Chemistry course.**
