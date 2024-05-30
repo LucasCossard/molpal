@@ -20,6 +20,7 @@ import glob
 import re
 import rdkit
 
+
 #=======================================================================================================================================================================================================================================
 
 '''
@@ -171,11 +172,6 @@ def Molpal_run(model, confid, metrics, init, batches, max_iter, dataset, top_x_p
 '''
 # UMAP functions: Create a file to have all the molecules on the map and integrates the UMAP visualization.
 '''
-
-import csv
-import gzip
-import h5py
-import numpy as np
 
 def create_combined_csv(smiles_csv_gz_file, fps_h5_file, output_csv_file):
       """
