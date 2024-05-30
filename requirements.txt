@@ -13,5 +13,5 @@ tensorflow-addons
 tqdm
 umap-learn
 pandas
+more-itertools
 matplotlib
-seaborn
