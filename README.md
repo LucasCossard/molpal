@@ -42,11 +42,12 @@ conda activate molpal
 pip install -r requirements.txt
 ```
 
- 3️⃣ Install the repository:
+3️⃣ Install the repository:
  
 ```
 pip install -e 
 ```
+
 4️⃣ Import all the functions using the following command:
 
 ```
