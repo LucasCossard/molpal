@@ -83,93 +83,6 @@ def selection_fct(csv_all, csv_allselected, output_csv):
 #=======================================================================================================================================================================================================================================
 
 '''
-# Let's define a function to run molpal with specified parameters, processe the results, and evaluate the fraction of top X% molecules found.
-'''
-
-
-def Molpal_run(model, confid, metrics, init, batches, max_iter, dataset, top_x_perc, k, BETA):
-
-    """
-    Runs the molpal tool with specified parameters, processes the results, and evaluates the fraction of top X% molecules found.
-
-    Parameters:
-    - model (str): The model to be used by molpal.
-    - confid (str): The confidence method to be used.
-    - metrics (str): The metric for evaluation.
-    - init (int): Initial size of the dataset.
-    - batches (int): Batch size for iterations.
-    - max_iter (int): Maximum number of iterations.
-    - dataset (int): Dataset identifier used to specify the dataset file.
-    - top_x_perc (float): The top X percentage of molecules to consider.
-    - k (int): Number of top samples to select.
-    - BETA (float): Beta parameter for model configuration.
-
-    Functionality:
-    1. Runs the molpal tool with the specified parameters, generating intermediate and final output files.
-    2. Moves and renames the final output file.
-    3. Reads the dataset file and selects the top X% of molecules based on their scores.
-    4. Saves the selected top X% molecules to a new file.
-    5. Reads the final output file from molpal and finds common molecules with the top X% list.
-    6. Prints the fraction of top X% molecules found in the final output.
-    7. Processes and merges CSV files.
-    8. Performs selection using the specified function.
-
-    Outputs:
-    - Prints the fraction of top X% molecules found.
-    - Moves and renames output files.
-    - Calls additional functions to process and select data.
-    """
-
-    !molpal run --write-intermediate --write-final --retrain-from-scratch --library /content/molpal/data/Enamine10k_scores.csv.gz -o lookup --objective-config /content/molpal/examples/objective/Enamine10k_lookup.ini \
-        --model {model} --conf-method {confid} --metric {metrics} --init-size {init} \
-        --batch-size {batches} --max-iters {max_iter} --fps /content/molpal/folder_output/fps_file.h5 \
-        --output-dir run_output -k {k} --beta {BETA}
-
-    output_filename_csv = f"/content/molpal/folder_output/run_output/all_explored_final_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}.csv"
-    !mv /content/molpal/folder_output/run_output/all_explored_final.csv {output_filename_csv}
-
-    output_folder_name = f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}"
-    !mv /content/molpal/folder_output/run_output {output_folder_name}
-
-    file_path = f'/content/molpal/data/Enamine{dataset}k_scores.csv.gz'
-    df = pd.read_csv(file_path)
-
-    df_sorted = df.sort_values(by='score', ascending=True)
-
-    percentile_index = int(len(df_sorted)* top_x_perc)
-
-    top_x_smiles = df_sorted[['smiles', 'score']].iloc[:percentile_index]
-
-    output_file_path = f'/content/molpal/data/Top_{top_x_perc}_Enamine10k_scores.csv'
-    top_x_smiles.to_csv(output_file_path, index=False)
-
-    df_found = pd.read_csv(f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}/all_explored_final_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}.csv")
-    df_top_x = pd.read_csv(output_file_path)
-
-    smiles_found = set(df_found['smiles'])
-    smiles_top_x = set(df_top_x['smiles'])
-
-    common_smiles = smiles_found.intersection(smiles_top_x)
-
-    num_common_smiles = len(common_smiles)
-    print("Fraction of top", top_x_perc*100, " % of smiles found:", num_common_smiles*100 / len(smiles_top_x), "%")
-
-
-    process_and_merge_csvs(f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}/all_explored_final_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}.csv",
-                           f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}/all_ucb.csv",
-                           f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}/all_std.csv",
-                           f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}/all_data"
-                           )
-
-    selection_fct(f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}/all_data",
-                  f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}/all_explored_final_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}.csv",
-                  f"/content/molpal/folder_output/run_output_{model}_{metrics}_{init}_{batches}_{max_iter}_beta_{BETA}/all_selected_data"
-    )
-
-
-#=======================================================================================================================================================================================================================================
-
-'''
 # UMAP functions: Create a file to have all the molecules on the map and integrates the UMAP visualization.
 '''
 
@@ -319,6 +232,8 @@ plt.legend()
 plt.savefig('umap_beta_4_all_iter.png')
 plt.show()
 
+#=======================================================================================================================================================================================================================================
+
 def Molpal_run(model, confid, metrics, init, batches, max_iter, k, BETA):
     """
     Runs the MolPAL algorithm with specified parameters and saves the results.
@@ -376,39 +291,6 @@ def frac_top_x(top_x, csv_file):
 
     num_common_smiles = len(common_smiles)
     print("Fraction of top", top_x, "smiles found:", num_common_smiles / len(smiles_top_x))
-
-def molpal_umap(model, confid, metrics, init, batches, max_iter, top_x, k, BETA):
-    """
-    Integrates the UMAP visualization, MolPAL run, and fraction calculation.
-
-    Parameters:
-    - model (str): Model to use for the MolPAL run.
-    - confid (str): Confidence method.
-    - metrics (str): Evaluation metric.
-    - init (int): Initial dataset size.
-    - batches (int): Batch size for each iteration.
-    - max_iter (int): Maximum number of iterations.
-    - top_x (int): Number of top molecules to consider for fraction calculation.
-    - k (int): Number of neighbors for k-nearest neighbors.
-    - BETA (float): Beta parameter for the MolPAL run.
-
-    Returns:
-    - None
-    """
-
-    smiles_score = '/content/molpal/data/Enamine10k_scores.csv.gz'
-    fps = '/content/molpal/folder_output/fps_file.h5'
-    create_combined_csv(smiles_score, fps, 'smiles_fps_score.csv')
-
-    Molpal_run(model, confid, metrics, init, batches, max_iter, k, BETA)
-
-    csv_file = '/content/molpal/folder_output/smiles_fps_score.csv'
-    smiles_color_csv = f'/content/molpal/folder_output/run_output_beta_{BETA}/all_explored_final_beta_{BETA}.csv'
-    umap_visualization(csv_file, smiles_color_csv)
-
-    top_file = f'/content/molpal/folder_output/run_output_beta_{BETA}/all_explored_final_beta_{BETA}.csv'
-
-    frac_top_x(top_x, top_file)
 
 #=======================================================================================================================================================================================================================================
 
@@ -756,3 +638,172 @@ def experiment_multirun50k(model, confid, metrics, init, batches, max_iter, data
       print("The Enrichement Factor EF was calculated to be", EF)
 
       return frac, EF
+
+#=======================================================================================================================================================================================================================================
+'''
+Tanimoto Similarity functions
+'''
+
+class NCircles:
+    def __init__(self, threshold=0.75):
+        self.sim_mat_func = similarity_matrix_tanimoto
+        self.t = threshold
+
+    def get_circles(self, args):
+        vecs, sim_mat_func, t = args
+        circs = []
+
+        for vec in vecs:
+            if len(circs) > 0:
+                dists = 1.0 - sim_mat_func([vec], circs)
+                if dists.min() <= t:
+                    continue
+            circs.append(vec)
+
+        return circs
+
+    def measure1(self, vecs, n_chunk=64):
+        for i in range(3):
+            chunk_size = max(1, n_chunk // (2 ** i))  # Ensure chunk_size is at least 1
+            vecs_list = list(mit.chunked(vecs, chunk_size))
+            args = zip(vecs_list, [self.sim_mat_func] * len(vecs_list), [self.t] * len(vecs_list))
+            circs_list = list(map(self.get_circles, args))
+            vecs = [c for ls in circs_list for c in ls]
+            random.shuffle(vecs)
+
+        vecs = self.get_circles((vecs, self.sim_mat_func, self.t))
+        return len(vecs), vecs  # Ensure measure returns a tuple
+
+    def measure(self, vecs, n_chunk=64):
+        for i in range(3):
+            vecs_list = list(mit.divide(n_chunk // (2 ** i), vecs))
+            args = zip(vecs_list, [self.sim_mat_func] * len(vecs_list), [self.t] * len(vecs_list))
+            circs_list = list(map(self.get_circles, args))
+            vecs = [c for ls in circs_list for c in ls]
+            random.shuffle(vecs)
+        vecs = self.get_circles((vecs, self.sim_mat_func, self.t))
+        return len(vecs), vecs
+
+
+def get_ncircle(df):
+    if 'FPS' not in df:
+        df['FPS'] = [AllChem.GetMorganFingerprintAsBitVect(mol, 2, 1024) for mol in df['MOL']]
+    return NCircles().measure(df['FPS'])
+
+
+def get_ncircle1(df):
+    if 'FPS' not in df:
+        df['FPS'] = [AllChem.GetMorganFingerprintAsBitVect(mol, 2, 1024) for mol in df['MOL']]
+    n_circles, vecs = NCircles().measure(df['FPS'])  # Ensure it returns a tuple
+    return n_circles, vecs
+
+def similarity_matrix_tanimoto(fps1, fps2):
+    similarities = [BulkTanimotoSimilarity(fp, fps2) for fp in fps1]
+    return np.array(similarities)
+
+def average_agg_tanimoto(stock_vecs, gen_vecs,
+                         batch_size=5000, agg='max',
+                         device='cpu', p=1):
+    """
+    For each molecule in gen_vecs finds closest molecule in stock_vecs.
+    Returns average tanimoto score for between these molecules
+
+    Parameters:
+        stock_vecs: numpy array <n_vectors x dim>
+        gen_vecs: numpy array <n_vectors' x dim>
+        agg: max or mean
+        p: power for averaging: (mean x^p)^(1/p)
+    """
+    assert agg in ['max', 'mean'], "Can aggregate only max or mean"
+    agg_tanimoto = np.zeros(len(gen_vecs))
+    total = np.zeros(len(gen_vecs))
+    for j in range(0, stock_vecs.shape[0], batch_size):
+        x_stock = torch.tensor(stock_vecs[j:j + batch_size]).to(device).float()
+        for i in range(0, gen_vecs.shape[0], batch_size):
+            y_gen = torch.tensor(gen_vecs[i:i + batch_size]).to(device).float()
+            y_gen = y_gen.transpose(0, 1)
+            tp = torch.mm(x_stock, y_gen)
+            jac = (tp / (x_stock.sum(1, keepdim=True) +
+                         y_gen.sum(0, keepdim=True) - tp)).cpu().numpy()
+            jac[np.isnan(jac)] = 1
+            if p != 1:
+                jac = jac**p
+            if agg == 'max':
+                agg_tanimoto[i:i + y_gen.shape[1]] = np.maximum(
+                    agg_tanimoto[i:i + y_gen.shape[1]], jac.max(0))
+            elif agg == 'mean':
+                agg_tanimoto[i:i + y_gen.shape[1]] += jac.sum(0)
+                total[i:i + y_gen.shape[1]] += jac.shape[0]
+    if agg == 'mean':
+        agg_tanimoto /= total
+    if p != 1:
+        agg_tanimoto = (agg_tanimoto)**(1/p)
+    return np.mean(agg_tanimoto)
+
+def smiles_to_fingerprint(smiles):
+    mol = Chem.MolFromSmiles(smiles)
+    if mol is not None:
+        return AllChem.GetMorganFingerprintAsBitVect(mol, 2, 1024)
+    else:
+        return None
+
+def bitvect_to_list(bitvect):
+    return [int(bitvect.GetBit(i)) for i in range(bitvect.GetNumBits())]
+
+ef plot_circles1(df, n_cluster):
+
+    """
+    This script provides functions for visualizing and determining the optimal number of clusters for molecular data.
+    The steps include:
+
+    1. **plot_circles1(df, n_cluster)**:
+    - Unpack the number of circles and vectors from the dataset.
+    - Convert molecular fingerprints to a numpy array.
+    - Perform K-Means clustering on the data.
+    - Use PCA to reduce the data to 2 dimensions.
+    - Plot the reduced data with cluster labels for visual inspection.
+
+    2. **elbow_method(data, max_k)**:
+    - Compute the Sum of Squared Errors (SSE) for a range of cluster numbers.
+    - Plot the SSE against the number of clusters to use the Elbow Method for determining the optimal number of clusters.
+    """
+    n_circles, vecs = get_ncircle1(df)  # Properly unpack the returned tuple
+    print(f'Number of circles: {n_circles}')
+
+    # Convert fingerprints to numpy array
+    vecs_array = np.array([bitvect_to_list(fp) for fp in vecs])
+
+    # Perform K-Means clustering
+    kmeans = KMeans(n_clusters=n_cluster, random_state=42)
+    cluster_labels = kmeans.fit_predict(vecs_array)
+
+    # Perform PCA to reduce dimensions to 2
+    pca = PCA(n_components=2)
+    reduced_vecs = pca.fit_transform(vecs_array)
+
+    # Plot the reduced vectors with cluster labels
+    plt.figure(figsize=(10, 8))
+    scatter = plt.scatter(reduced_vecs[:, 0], reduced_vecs[:, 1], c=cluster_labels, cmap='viridis', marker='o')
+    plt.title('Chemical Space 2D Plot of Circles with Clusters')
+    plt.xlabel('PCA Component 1')
+    plt.ylabel('PCA Component 2')
+    plt.grid(True)
+    plt.legend(*scatter.legend_elements(), title="Clusters")
+    plt.show()
+
+def elbow_method(data, max_k):
+    iters = range(1, max_k+1, 1)
+    sse = []
+
+    for k in iters:
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        kmeans.fit(data)
+        sse.append(kmeans.inertia_)  # WCSS
+
+    plt.figure(figsize=(10, 8))
+    plt.plot(iters, sse, marker='o')
+    plt.xlabel('Number of clusters (k)')
+    plt.ylabel('Sum of squared distances (WCSS)')
+    plt.title('Elbow Method for Optimal Number of Clusters')
+    plt.grid(True)
+    plt.show()
