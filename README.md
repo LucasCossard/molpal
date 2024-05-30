@@ -61,9 +61,9 @@ from molpal.explorer import Explorer
 ```
 
 ## 📝 Notebooks 📝
-In the notebooks file, we provide 3 notebooks we used to carry out our various experiments in order to observe the effects of:
+In the notebooks file, we provide 3 notebooks we used to carry out our various experiments. 
 
-1️⃣ Notebook:
+Notebook 1️⃣ to observe the effects of:
 - UCB & Score correlation
 - Initialization size
 - UCB & β study
@@ -71,10 +71,10 @@ In the notebooks file, we provide 3 notebooks we used to carry out our various e
 - Diversity
 - UCB & Score correlation on an Artficial 10k dataset
 
-2️⃣ Notebook:
+Notebook 2️⃣ to:
 - Generate an Artficial 10k dataset usign HTS
 
-3️⃣ Notebook:
+Notebook 3️⃣ to plot:
 - UMAP for Enamine50k
 
 ## 📁 Functions 📁
