@@ -5,21 +5,24 @@ As some of these functions use molpal with ‘!molpal run’, this file is not u
 #=======================================================================================================================================================================================================================================
 
 import pandas as pd
+import numpy as npf
+import gzip
+import shutil
 import csv
 import gzip
-import h5py
-import numpy as np
-import pandas as pd
 import umap
 import matplotlib.pyplot as plt
-import matplotlib.cm as cm
+import more_itertools as mit
 import seaborn as sns
-import os
-from rdkit import Chem
-import glob
-import re
-import rdkit
+import random
+import torch
 
+from io import StringIO
+from rdkit import Chem
+from rdkit.Chem import AllChem
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+from rdkit.DataStructs import BulkTanimotoSimilarity
 
 #=======================================================================================================================================================================================================================================
 
