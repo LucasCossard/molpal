@@ -78,9 +78,9 @@ In the notebooks file, we provide 3 notebooks we used to carry out our various e
 - UMAP for Enamine50k
 
 ## 📁 Functions 📁
-We added the file ´AI4Chem.py´, listing all the functions we have defined for this project. 
+We added the file `AI4Chem.py`, listing all the functions we have defined for this project. 
 
-Unfortunately, some of these functions use molpal with ´!molpal run´, which makes this file unusable, so it is present as a showcase of our functions. 
+Unfortunately, some of these functions use molpal with `!molpal run`, which makes this file unusable, so it is present as a showcase of our functions. 
 
 ## 📗 License 📕 
 This project and Molpal software used are licensed under the MIT License.
