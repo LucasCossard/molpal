@@ -1,3 +1,6 @@
+"""
+This files contain a simple function to see if we could run a "!molpal run" command when we clone and install molapl. Saddly it doesn't work, even with subprocess library.
+"""
 import subprocess
 import pandas as pd
 
