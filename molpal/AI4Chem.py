@@ -14,6 +14,11 @@ import umap
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import seaborn as sns
+import os
+from rdkit import Chem
+import glob
+import re
+import rdkit
 
 #=======================================================================================================================================================================================================================================
 
@@ -218,73 +223,105 @@ smiles_score = '/content/molpal/data/Enamine10k_scores.csv.gz'
 fps = '/content/molpal/folder_output/fps_file.h5'
 create_combined_csv(smiles_score, fps, '/content/molpal/folder_output/smiles_fps_score.csv')
 
-import pandas as pd
-import numpy as np
-import umap
-import matplotlib.pyplot as plt
-import matplotlib.cm as cm
+
+def smiles_difference(dataset1_path, dataset2_path, output_path):
+    df1 = pd.read_csv(dataset1_path)
+    df2 = pd.read_csv(dataset2_path)
+
+    df1.rename(columns={df1.columns[0]: 'smiles'}, inplace=True)
+    df2.rename(columns={df2.columns[0]: 'smiles'}, inplace=True)
+
+    df1['Mol'] = df1['smiles'].apply(Chem.MolFromSmiles)
+    df2['Mol'] = df2['smiles'].apply(Chem.MolFromSmiles)
+
+    df1['Canonical_SMILES'] = df1['Mol'].apply(Chem.MolToSmiles)
+    df2['Canonical_SMILES'] = df2['Mol'].apply(Chem.MolToSmiles)
+
+    common_smiles = set(df1['Canonical_SMILES']).intersection(set(df2['Canonical_SMILES']))
+
+    df2_unique = df2[~df2['Canonical_SMILES'].isin(common_smiles)]
+
+    df2_unique = df2_unique.drop(columns=['Mol', 'Canonical_SMILES'])
+
+    df2_unique.to_csv(output_path, index=False)
 
 def umap_visualization(csv_file, csv_explore):
-    """
-    Performs UMAP dimensionality reduction and visualizes the embeddings.
-
-    Parameters:
-    - csv_file (str): Path to the CSV file containing the data with fingerprints and scores.
-    - csv_explore (str): Path to the CSV file containing the data to be highlighted (explored data).
-
-    Returns:
-    - None
-    """
-    # Read the CSV file into a pandas DataFrame
     data = pd.read_csv(csv_file)
     explore = pd.read_csv(csv_explore)
 
-    # Extract common SMILES
     data_smiles = set(data['Smiles'])
     explore_smiles = set(explore['smiles'])
     common_smiles = data_smiles.intersection(explore_smiles)
 
-    # Filter data to select only rows with common SMILES
     common_data = data[data['Smiles'].isin(common_smiles)]
 
-
-    # Select all columns containing "FP" as fingerprints
     fingerprint_cols = [col for col in data.columns if 'FP' in col]
     common_fingerprint_cols = [col for col in common_data.columns if 'FP' in col]
 
-
-    # Identify the score column as the last column in the DataFrame
     score_col = data.columns[-1]
     common_score_col = common_data.columns[-1]
 
-    # Extract features (fingerprints) and labels (scores)
     features = data[fingerprint_cols].values
-    common_features = common_data[fingerprint_cols].values
+    common_features = common_data[common_fingerprint_cols].values
     labels = data[score_col].values
-    common_labels = common_data[score_col].values
+    common_labels = common_data[common_score_col].values
 
-    # Perform UMAP dimensionality reduction
     reducer = umap.UMAP(random_state=42)
     embedding = reducer.fit_transform(features)
     embedding_2 = reducer.transform(common_features)
 
-    #scaling the scale
+    return embedding, embedding_2, labels
 
-    vmin = min(labels.min(), common_labels.min())
-    vmax = max(labels.max(), common_labels.max())
+base_path = "/content/molpal/data/beta_50k/"
+dataset_paths = glob.glob(os.path.join(base_path, "top_*_explored_iter_*_beta_4.csv"))
 
-    sm = cm.ScalarMappable(cmap='Greys', norm=plt.Normalize(vmin=vmin, vmax=vmax))
-    sm.set_array([])
-    cbar = plt.colorbar(sm, label='Score')
+def extract_num(path):
+    match = re.search(r'top_(\d+)_explored_iter_(\d+)_beta_4', path)
+    return int(match.group(2)), int(match.group(1))
 
-    # Plot the UMAP visualization
-    plt.figure(figsize=(10, 6))
-    plt.scatter(embedding[:, 0], embedding[:, 1], c=labels, cmap='Greys', s=10)
-    plt.scatter(embedding_2[:,0],embedding_2[:,1], color = 'green', s=10)
-    plt.title('UMAP Visualization')
+dataset_paths = sorted(dataset_paths, key=extract_num)
+print(dataset_paths)
+
+og_database = '/content/molpal/folder_output/smiles_fps_score.csv'
+
+cmap = cm.get_cmap('plasma', len(dataset_paths))
+
+all_embeddings = []
+all_labels = []
+
+for i in range(1, len(dataset_paths)):
+    dataset1_path = dataset_paths[i-1]
+    dataset2_path = dataset_paths[i]
+    output_path = f'unique_dataset_{i}.csv'
+
+    smiles_difference(dataset1_path, dataset2_path, output_path)
+
+    embedding, embedding_2, labels = umap_visualization(og_database, output_path)
+
+    all_embeddings.append(embedding_2)
+    all_labels.append(labels)
+
+    plt.figure(figsize=(10, 8))
+    plt.scatter(embedding[:, 0], embedding[:, 1], c=labels, cmap='Greys', s=10, vmin=min(labels), vmax=max(labels))
+    plt.scatter(embedding_2[:, 0], embedding_2[:, 1], color=cmap(i), s=10, label=f'iter {i}')
     plt.xlabel('UMAP Dimension 1')
     plt.ylabel('UMAP Dimension 2')
+
+    plt.legend()
+    plt.savefig(f'umap_beta_4_iter_{i}.png')
     plt.show()
+
+
+plt.figure(figsize=(10, 8))
+plt.scatter(embedding[:, 0], embedding[:, 1], c=labels, cmap='Greys', s=10, vmin=min(labels), vmax=max(labels))
+for i, c_embedding in enumerate(all_embeddings):
+    plt.scatter(c_embedding[:, 0], c_embedding[:, 1], color=cmap(i), s=10)
+plt.xlabel('UMAP Dimension 1')
+plt.ylabel('UMAP Dimension 2')
+#plt.title('UMAP Visualization for All Unique Datasets')
+plt.legend()
+plt.savefig('umap_beta_4_all_iter.png')
+plt.show()
 
 def Molpal_run(model, confid, metrics, init, batches, max_iter, k, BETA):
     """
