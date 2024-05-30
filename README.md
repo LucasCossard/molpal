@@ -15,14 +15,15 @@ Using  a modified version of Molpal, the objective of this project is to find a 
 
 ## 🔨 Installation 🔨
 
-1. Clone the modified version of Molpal from this repository:
+1️⃣ Clone the modified version of Molpal from this repository:
 
 ```
 git clone https://github.com/Nohalyan/molpal
 ```
 
-2. Install the necessary dependencies.
-You can use the environment.yml for Conda:
+2️⃣ Install the necessary dependencies.
+
+2️⃣.1️⃣ You can use the environment.yml for Conda:
 ```
 cd /path_to_molpal
 ```
@@ -35,18 +36,18 @@ And activate the environment::
 conda activate molpal
 ```
 
-Or use the 'requirements.txt' using pip after the  installation of the repository.
+2️⃣.2️⃣ Or use the 'requirements.txt' using pip after the  installation of the repository.
 
 ```
 pip install -r requirements.txt
 ```
 
-3.   Install the repository:
+ 3️⃣ Install the repository:
  
 ```
 pip install -e 
 ```
-4. Import all the functions using the following command
+4️⃣ Import all the functions using the following command:
 
 ```
 from molpal.acquirer import Acquirer
@@ -59,15 +60,21 @@ from molpal.explorer import Explorer
 ```
 
 ## 📝 Notebooks 📝
-In the notebooks file, we provide the notebook we used to carry out our various experiments in order to observe the effects of:
+In the notebooks file, we provide 3 notebooks we used to carry out our various experiments in order to observe the effects of:
 
+1️⃣ Notebook:
 - UCB & Score correlation
 - Initialization size
 - UCB & β study
 - Acquisition function on active learning
 - Diversity
 - UCB & Score correlation on an Artficial 10k dataset
-- UMAP
+
+2️⃣ Notebook:
+- Generate an Artficial 10k dataset usign HTS
+
+3️⃣ Notebook:
+- UMAP for Enamine50k
 
 ## 📗 License 📕 
 This project and Molpal software used are licensed under the MIT License.
