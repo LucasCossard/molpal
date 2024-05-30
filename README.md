@@ -1,7 +1,7 @@
 ![Project Logo](assets/Molpal_Logo_README_Best.png)
 
 <h1 align="center">
-Leveraging Active Learning with uncertainty quantification by Investigation of Molpal Exploration
+Leveraging Active Learning through Molpal Exploration
 </h1>
 
 **Note :This repository is a fork from https://github.com/coleygroup/molpal**
