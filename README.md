@@ -1,4 +1,4 @@
-![Project Logo](assets/Molpal_Logo_README.png)
+![Project Logo](assets/Molpal_Logo_README_Best.png)
 
 <h1 align="center">
 Leveraging Active Learning with uncertainty quantification by Investigation of Molpal Exploration
