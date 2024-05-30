@@ -21,7 +21,21 @@ Using  a modified version of Molpal, the objective of this project is to find a 
 git clone https://github.com/Nohalyan/molpal
 ```
 
-2. Install the necessary dependencies. You can use the environment.yml for Conda or use the 'requirements.txt' using pip after the  installation of the repository.
+2. Install the necessary dependencies.
+You can use the environment.yml for Conda:
+```
+cd /path_to_molpal
+```
+Then create the environment: 
+```
+conda env create -f environment.yml
+```
+And activate the environment::
+```
+conda activate molpal
+```
+
+Or use the 'requirements.txt' using pip after the  installation of the repository.
 
 ```
 pip install -r requirements.txt
