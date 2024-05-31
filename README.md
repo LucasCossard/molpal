@@ -11,7 +11,7 @@ Understanding and Leveraging Active Learning Through MolPAL
 ## 🔍 Overview 🔎
 
 Molpal (Molecular Pool-based Active Learning) is a software created by the coleygroup for the accelerated discovery of compounds in high-throughput virtual screening environments.
-Using  a modified version of Molpal, the objective of this project is to find a good way to understand, and to leverage active learning to minimize the number of total molecules acquired by the algorithm, while recovering a good percentage of the top X%  of the candidates depending on the dataset.
+Using  a modified version of Molpal, the objective of this project is to find a good way to understand and leverage active learning to minimize the number of total molecules acquired by the algorithm, while recovering a good percentage of the top X%  of the candidates depending on the dataset.
 
 ## 🔨 Installation 🔨
 
