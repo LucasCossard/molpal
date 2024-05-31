@@ -1,7 +1,7 @@
 ![Project Logo](assets/Molpal_Logo_README_Best.png)
 
 <h1 align="center">
-Understanding and Leveraging Active Learning through MolPAL
+Understanding and Leveraging Active Learning Through MolPAL
 </h1>
 
 **Note :This repository is a fork from https://github.com/coleygroup/molpal**
