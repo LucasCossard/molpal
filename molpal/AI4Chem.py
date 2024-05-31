@@ -23,6 +23,8 @@ from rdkit.Chem import AllChem
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from rdkit.DataStructs import BulkTanimotoSimilarity
+from sklearn.cluster import AgglomerativeClustering
+from scipy.spatial.distance import pdist, squareform
 
 #=======================================================================================================================================================================================================================================
 
@@ -816,14 +818,6 @@ def elbow_method(data, max_k):
 Here is the code used to generate the Artificial_10k dataset.
 """
 
-import pandas as pd
-from rdkit import Chem
-from rdkit.Chem import AllChem, DataStructs
-import numpy as np
-from sklearn.cluster import AgglomerativeClustering
-from scipy.spatial.distance import pdist, squareform
-
-
 # Load the dataset
 # Assume the SMILES strings are in a column named 'smiles'
 df = top_1_percent
@@ -864,12 +858,6 @@ most_dissimilar_molecules = [(smiles_list[idx], idx) for idx in representative_i
 # Print the 100 most dissimilar molecules
 for mol in most_dissimilar_molecules:
     print(mol)
-
-
-import pandas as pd
-from rdkit import Chem
-from rdkit.Chem import AllChem, DataStructs
-import numpy as np
 
 # Example list of SMILES strings
 smiles_list = []
