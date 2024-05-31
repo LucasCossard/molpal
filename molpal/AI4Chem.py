@@ -810,3 +810,127 @@ def elbow_method(data, max_k):
     plt.title('Elbow Method for Optimal Number of Clusters')
     plt.grid(True)
     plt.show()
+
+#=============================
+"""
+Here is the code used to generate the Artificial_10k dataset.
+"""
+
+import pandas as pd
+from rdkit import Chem
+from rdkit.Chem import AllChem, DataStructs
+import numpy as np
+from sklearn.cluster import AgglomerativeClustering
+from scipy.spatial.distance import pdist, squareform
+
+
+# Load the dataset
+# Assume the SMILES strings are in a column named 'smiles'
+df = top_1_percent
+smiles_list = df['smiles'].tolist()
+
+# Generate molecular fingerprints
+fps = [AllChem.GetMorganFingerprintAsBitVect(Chem.MolFromSmiles(smile), 2, nBits=2048) for smile in smiles_list]
+
+# Calculate the Dice dissimilarity matrix (1 - similarity)
+num_mols = len(fps)
+dissimilarity_matrix = np.zeros((num_mols, num_mols))
+
+for i in range(num_mols):
+    for j in range(i + 1, num_mols):
+        sim = DataStructs.DiceSimilarity(fps[i], fps[j])
+        dissimilarity_matrix[i, j] = 1 - sim
+        dissimilarity_matrix[j, i] = 1 - sim
+
+# Perform clustering to ensure diversity
+distance_matrix = squareform(dissimilarity_matrix)
+clustering = AgglomerativeClustering(n_clusters=100, affinity='precomputed', linkage='average')
+clusters = clustering.fit_predict(dissimilarity_matrix)
+
+# Select a representative molecule from each cluster
+representative_indices = []
+for cluster_id in range(100):
+    cluster_indices = np.where(clusters == cluster_id)[0]
+    if len(cluster_indices) > 0:
+        # Select the molecule with the highest average dissimilarity in the cluster
+        cluster_dissimilarities = dissimilarity_matrix[cluster_indices][:, cluster_indices]
+        avg_dissimilarities = np.mean(cluster_dissimilarities, axis=1)
+        representative_idx = cluster_indices[np.argmax(avg_dissimilarities)]
+        representative_indices.append(representative_idx)
+
+# Convert to a more readable format
+most_dissimilar_molecules = [(smiles_list[idx], idx) for idx in representative_indices]
+
+# Print the 100 most dissimilar molecules
+for mol in most_dissimilar_molecules:
+    print(mol)
+
+
+import pandas as pd
+from rdkit import Chem
+from rdkit.Chem import AllChem, DataStructs
+import numpy as np
+
+# Example list of SMILES strings
+smiles_list = []
+for mol, idx in most_dissimilar_molecules:
+    smiles_list.append(mol)
+
+# Load your dataframe (replace 'data_f.csv' with your actual file)
+# Assume the SMILES strings are in a column named 'smiles' in the dataframe
+df_2M = pd.read_csv("/content/molpal/data/EnamineHTS_scores.csv.gz")
+df_2M_smiles = df_2M['smiles'].tolist()
+
+# Generate molecular fingerprints for the dataset
+df_2M_fps = [AllChem.GetMorganFingerprintAsBitVect(Chem.MolFromSmiles(smile), 2, nBits=2048) for smile in df_2M_smiles]
+
+# Function to find the 100 most dissimilar molecules for a given query_smiles
+def find_top_100_dissimilar(query_smiles, data_f_fps, data_f_smiles, exclude_indices):
+    query_fp = AllChem.GetMorganFingerprintAsBitVect(Chem.MolFromSmiles(query_smiles), 2, nBits=2048)
+    dissimilarities = []
+    for idx, fp in enumerate(data_f_fps):
+        if idx not in exclude_indices:
+            dissim = 1 - DataStructs.DiceSimilarity(query_fp, fp)
+            dissimilarities.append((dissim, idx))
+
+    # Sort by dissimilarity in descending order and take the top 100
+    top_100 = sorted(dissimilarities, key=lambda x: x[0], reverse=True)[:100]
+    top_100_indices = [idx for _, idx in top_100]
+    return top_100_indices
+
+# Initialize a set to track used indices to avoid duplicates
+used_indices = set()
+
+# Dictionary to store results for each query SMILES
+results = {}
+
+# Filter and select the most dissimilar molecules (Tanimoto < 0.06)
+final_selected_indices = []
+final_selected_smiles = []
+
+for query_smiles in smiles_list:
+    top_100_indices = find_top_100_dissimilar(query_smiles, df_2M_fps, df_2M_smiles, used_indices)
+    for idx in top_100_indices:
+        query_fp = AllChem.GetMorganFingerprintAsBitVect(Chem.MolFromSmiles(query_smiles), 2, nBits=2048)
+        selected_fp = df_2M_fps[idx]
+        if DataStructs.TanimotoSimilarity(query_fp, selected_fp) < 0.06:
+            final_selected_indices.append(idx)
+            final_selected_smiles.append(df_2M_smiles[idx])
+            used_indices.add(idx)
+            if len(final_selected_indices) >= 10000:
+                break
+    if len(final_selected_indices) >= 10000:
+        break
+
+# Function to save the selected SMILES to a CSV file
+def save_smiles_to_csv(smiles_list, filename):
+    df = pd.DataFrame(smiles_list, columns=['smiles'])
+    df.to_csv(filename, index=False)
+
+# Save the selected SMILES to a CSV file
+save_smiles_to_csv(final_selected_smiles, 'database_Lucas3.csv')
+
+# Print the results
+print(f"Total selected molecules: {len(final_selected_smiles)}")
+for smile in final_selected_smiles:
+    print(smile)
