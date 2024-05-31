@@ -1,7 +1,7 @@
 ![Project Logo](assets/Molpal_Logo_README_Best.png)
 
 <h1 align="center">
-Leveraging Active Learning through Molpal Exploration
+Understanding and Leveraging Active Learning through MolPAL
 </h1>
 
 **Note :This repository is a fork from https://github.com/coleygroup/molpal**
@@ -11,7 +11,7 @@ Leveraging Active Learning through Molpal Exploration
 ## 🔍 Overview 🔎
 
 Molpal (Molecular Pool-based Active Learning) is a software created by the coleygroup for the accelerated discovery of compounds in high-throughput virtual screening environments.
-Using  a modified version of Molpal, the objective of this project is to find a good way to leverage active learning and uncertainty quantification to minimize the number of total molecules acquired by the algorithm, while recovering a good percentage of the top X%  of the candidates depending on the dataset.
+Using  a modified version of Molpal, the objective of this project is to find a good way to understand, and to leverage active learning to minimize the number of total molecules acquired by the algorithm, while recovering a good percentage of the top X%  of the candidates depending on the dataset.
 
 ## 🔨 Installation 🔨
 
