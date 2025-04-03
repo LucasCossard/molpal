@@ -96,6 +96,6 @@ This project is based on Molpal software, developed by the Coley Group: https://
 ## 📖 Authors 📖
 - Gaedecke Kelian: https://github.com/KelianGaedecke
 - Segura David: https://github.com/Davidmingsegura
-- Cossard Lucas: https://github.com/Nohalyan
+- Cossard Lucas: https://github.com/LucasCossard
 
 **This project was carried out as part of EPFL's AI for Chemistry course.**
